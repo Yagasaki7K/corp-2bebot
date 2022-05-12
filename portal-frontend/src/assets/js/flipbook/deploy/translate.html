@@ -1,0 +1,263 @@
+<!-- 
+                                                                                            
+ #############  ##############  ##########   ##############   ###############*  ########### 
+            ##  ##          ##  ##           ##          ##   ##-.        .-##     ##       
+            ##  ##          ##  ##           ##          ##   ##=---------- ##     ##       
+            ##  ##          #=  ##           ##          ##   ##=--=----=-- ##     ##       
+ ############   #############   ###########  #############    ##=-*#+--*#+- ##     ##       
+ ##             ##          ##  ##           ##          ##   ##=---------- ##     ##       
+ ##             ##          ##  ##           ##          ##   ##=---------- ##     ##       
+ ##                         ##  ##                       ##   ##=:        : ##     ##       
+ ################## #########=  ##############  ###########   =###########*:#      ##       
+         
+ CATÁLOGO DIGITAL - 2BEBOT.COM.BR
+
+-->
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">    
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link href="https://static.2bebot.com.br/componentes/bootstrap-tour/css/bootstrap-tour-standalone.min.css" rel="stylesheet">
+        
+        <link href="https://static.2bebot.com.br/componentes/toastr/toastr.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="css/flipbook.style.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+
+        <style>
+            .flipbook-add-cart{
+                bottom: auto;
+                right: auto;
+                position: absolute;
+                cursor: pointer;
+                z-index: 2;
+                text-align: center;
+                -webkit-transition: all 0.5s 0s ease-in-out !important;
+                -moz-transition: all 0.5s 0s ease-in-out !important;
+                -o-transition: all 0.5s 0s ease-in-out !important;
+                transition: all 0.5s 0s ease-in-out !important;
+            }
+            .btn-slide-down {
+                animation: slide-in-top 0.8s ease-in 0s 1 normal;
+            }
+            .btn-shaking {
+                animation: shake-animation 4.72s ease 5s infinite;
+            }
+            .btn-slide-down-shaking{
+                animation: slide-in-top 0.8s ease-in 0s 1 normal, shake-animation 4.72s ease 5s infinite;
+            }
+            .flipbook-add-cart:hover{
+                transform: scale(1.1);
+                -webkit-box-shadow: 2px 2px 7px 0px rgba(0,0,0,0.6);
+                -moz-box-shadow: 2px 2px 7px 0px rgba(0,0,0,0.6);
+                box-shadow: 2px 2px 7px 0px rgba(0,0,0,0.6);
+            }
+            
+            @keyframes slide-in-top {
+                0%{
+                -webkit-transform: translateY(-100px);
+                transform: translateY(-100px);
+                opacity: 0;
+                }
+                100%{
+                -webkit-transform: translateY(0);
+                transform: translateY(0);
+                opacity: 1;
+                }
+            }
+            @keyframes shake-animation {
+                    0% { transform:translate(0,0) }
+                1.78571% { transform:translate(8px,0) }
+                3.57143% { transform:translate(0,0) }
+                5.35714% { transform:translate(8px,0) }
+                7.14286% { transform:translate(0,0) }
+                8.92857% { transform:translate(8px,0) }
+                10.71429% { transform:translate(0,0) }
+                100% { transform:translate(0,0) }
+            }
+            .flipbook-jqt-cart{
+                background-image: url(https://static.2bebot.com.br/img/carrinho.png);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                bottom: auto;
+                right: auto;
+                position: absolute;
+                cursor: pointer;
+                z-index: 2;
+            }
+            .flipbook-jqt-cart-added{
+                background-image: url(https://static.2bebot.com.br/img/carrinho_secundario.png) !important;
+            }
+            .toast{
+                font-family: 'Roboto', sans-serif !important;
+            }
+            .toast-title {
+                font-weight: 700;
+                padding-bottom: 5px;
+            }
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://static.2bebot.com.br/componentes/toastr/toastr.min.js"></script>
+        <script src="https://static.2bebot.com.br/componentes/bootstrap-tour/js/bootstrap-tour-standalone.min.js"></script>
+        <script src="https://static.2bebot.com.br/componentes/flipbook/source/js/flipbook.js"></script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+        var fb;
+        var socket = io.connect('https://ws.2bebot.com.br');
+            $(document).ready(function () {
+
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": 0,
+                    "extendedTimeOut": 0,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
+                    "tapToDismiss": false
+                }
+                
+
+                $(document).on('click','.pular-tutorial',function(){
+                    toastr.remove();
+                });
+                $(document).on('click','.iniciar-tutorial',function(){
+                    toastr.remove();
+                    var tour = new Tour({
+                        name: "tutorial",
+                        steps: [
+                            {
+                                element: ".flipbook-textLayer",
+                                title: "Página inicial",
+                                content: "Este é o catálogo, você pode ver mais páginas arrastando para o lado!",
+                                backdrop: false,
+                            },
+                            {
+                                element: ".flipbook-right-arrow",
+                                title: "Navegação",
+                                content: "Clique nas setas laterais para mudar de página.",
+                                placement: "left",
+                                onNext: function(){
+                                    fb.nextPage();
+                                }
+                            },
+                            {
+                                element: ".flipbook-jqt-cart",
+                                title: "Adicionar produto",
+                                content: "Clique nos botões de carrinho para adicionar um produto.",
+                                backdrop: false,
+                            },                            
+                        ],
+                        container: ".flipbook-main-wrapper",
+                        orphan: true,
+                        backdrop: true,
+                        debug: true,
+                        backdropContainer: '.flipbook-main-wrapper',
+                        template: `<div class='popover tour'>
+                            <div class='arrow'></div>
+                            <h3 class='popover-title'></h3>
+                            <div class='popover-content'></div>
+                            <div class='popover-navigation'>
+                                <button class='btn btn-default' data-role='prev'>« Voltar</button>
+                                <span data-role='separator'>|</span>
+                                <button class='btn btn-default' data-role='next'>Próximo »</button>
+                            </div>
+                            <a href="#" data-role='end'>Sair do Tutorial</button>
+                        </div>`,
+                    });
+                    tour.init();
+                    
+                    tour.start(true);
+                    tour.restart();
+                    tour.goTo(0);
+                    tour.setCurrentStep(0);
+                });
+
+                $('body').tooltip({
+                    selector: '.flipbook-add-cart',
+                    position: { my: "left top+10", at: "left center" }
+                });
+                socket.emit('dashboard-pdf-paginas', {
+                    website: "5f56afbdd999047b09db4e7e"
+                }, (_data) => {
+                    _data = JSON.parse(_data);
+                    console.log(_data)
+                    var fb = $("#container").flipBook({
+                    
+                        pdfUrl:"https://static.2bebot.com.br/uploads/Episdio_16.pdf",
+                        //pdfUrl:"https://static.2bebot.com.br/uploads/RevistaHolofoteCompleta.pdf",
+                        layout:3,
+                        btnSize: 18,
+                        sideBtnSize: 64,
+                        skin:'dark',
+                        linkColor : '#000',
+                        logoImg: 'https://catalogodigital.shop/assets/img/intro-bau.png',
+                        //logoImg: 'https://novo.negociejequiti.com.br/assets/img/jequitiAzul.svg',
+                        logoUrl: '',
+                        logoCSS: 'max-width: 80%;max-height: 36px;margin-left: 5px;',
+                        skinBackground: '#412879', //'#980e79',
+                        onbookcreated: function(){
+                            toastr.info(`
+                                Precisa de ajuda para usar o catálogo?<br />
+                                Veja o tutorial que preparamos com dicas sobre como navegar pelo site.
+                                <br /><br />
+                                <button type="button" class="btn btn-success clear iniciar-tutorial" style="font-weight: 700;">Começar Tutorial</button>
+                                <button type="button" class="btn clear pular-tutorial">Pular</button>
+                            `, "Boas-vindas ao Catálogo Digital!");
+                        },
+                        cartProducts: {
+                            "12445": {
+                                "id": "12445",
+                                "titulo": "Desodorante Hidratante Corporal Derma B5",
+                                "descricao": "400ml",
+                                "valor": 24.9,
+                                "img": "https://jequiti.vteximg.com.br/arquivos/ids/161649-850-850/42.png?v=637328405988270000"
+                            },
+                            "12696": {
+                                "id": "12696",
+                                "titulo": "Sabonete Hidratante em Barra",
+                                "descricao": "5un 90g",
+                                "valor": 12.9,
+                                "img": "https://jequiti.vteximg.com.br/arquivos/ids/161652-850-850/39.png?v=637328407428870000",
+                                "opcional": ["Algodão", "Leite"]
+                            },
+                        },
+                        pages:_data
+
+                    });
+                    
+                })
+                
+
+            })
+            
+        </script>
+
+    </head>
+
+<body>
+<div id="container">
+   
+</div>
+
+</body>
+
+</html>
