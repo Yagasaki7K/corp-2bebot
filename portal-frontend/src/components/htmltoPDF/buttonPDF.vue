@@ -6,6 +6,7 @@
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { toLocaleBRL } from 'src/utils/formatters';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default {
@@ -38,7 +39,7 @@ export default {
             return finalDay + "/" + finalMonth;
         },
         exportPdf() {
-        console.log('ThisValue:', this.value);
+        console.log(JSON.stringify(this.value));
         const initialTable = `
         <table style="align-items: center">
             <tr>
@@ -47,9 +48,9 @@ export default {
                 <th style="text-align: center; border: 1px solid #ccc;">Total Visualizações</th>
             </tr>
             <tr>
-                <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${this.value.sellMonths}</td>
+                <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${this.value.sales}</td>
                 <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${this.value.sessions}</td>
-                <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${this.value.accesses}</td>
+                <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${this.value.accesses[0]}</td>
             </tr>
             <tr>
                 <th style="text-align: center; border: 1px solid #ccc;">Média Itens Carrinho</th>
@@ -65,21 +66,32 @@ export default {
     `;
 
 
-            const products = [
-                {
-                    name: this.value.productsTop[0], quantitySell: this.value.productsTop[1],
-                    unitPrice: this.value.productsTop[2], totalSell: this.value.productsTop[3]
-                }
-            ];
+            const products = (this.value.productsTop || []).map((product)=>({
+                name:product[0],
+                quantitySell:product[1],
+                unitPrice:product[2],
+                totalSell:product[3]
+            }));
 
-            const pages = [
-                {
-                    pages: this.value.pages[0][1], acess: this.value.pages[1][1]
-                }
-            ]
+            const pages =(this.value.pages || []).map(({page,access})=>({
+                page,
+                access
+            }))
+            
+            const sellMonths = (this.value.sellMonths || []).map(sellmonth=>({
+                month:sellmonth[0],
+                sells:sellmonth[1]
+            }))
+
+              const hourOfDay = (this.value.hourOfDay || [ ]).map(element=>({
+                  hour:element[0],
+                  accesses:element[1]
+              }))
 
             let htmlProducts = '';
             let htmlPages = '';
+            let htmlMonthSales=''
+            let htmlHourOfDay = ''
 
             products.forEach(product => htmlProducts += `
     <tr>
@@ -90,14 +102,29 @@ export default {
     </tr>
     `);
 
-            pages.forEach(page => htmlPages += `
+            pages.slice(0,10).forEach(({page,access}) => htmlPages += `
       <tr>
-          <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">Página <bold> ${page.pages} </bold>
+          <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">Página <bold> ${page} </bold>
           </td>
-          <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${page.acess}</td>
+          <td style="text-align: center; border; border: 0.5px solid #ccc;" height="50">${access}</td>
       </tr>
       `)
 
+      sellMonths.forEach(sellmonth=>{
+          htmlMonthSales+=`
+           <tr>
+                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${sellmonth.month}</td>
+                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${toLocaleBRL(sellmonth.sells)}</td>
+            </tr>
+          `
+      })
+
+      
+        hourOfDay.forEach(({hour,accesses})=>{
+          htmlHourOfDay+=`
+           <li>Hora ${hour} - ${accesses}%</li>
+          `
+      })
 
             var val = htmlToPdfmake(`
     <div class="logotipo">
@@ -150,21 +177,23 @@ export default {
 
             <div>
               <h3 style="color: #00405c"> Meios de Acesso </h3>
-              <table>
                 <div align="center">
+              <table>
                     <tr style="max-width: 500px">
                         <th style="text-align: center; border: 1px solid #ccc;">Desktop</th>
                         <th style="text-align: center; border: 1px solid #ccc;">Mobile</th>
                     </tr>
-                    <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.accesses[1]}</td>
-                    <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.accesses[0]}</td>
+                    <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.accesses[2][1]}</td>
+                    <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.accesses[1][1]}</td>
+                </table>
                 </div>
+                
             </div>
-
+            <hr>
             <div>
               <h3 style="color: #00405c"> Compartilhamentos </h3>
-              <table>
                 <div align="center">
+              <table>
                     <tr style="max-width: 500px">
                         <th style="text-align: center; border: 1px solid #ccc;">E-mail</th>
                         <th style="text-align: center; border: 1px solid #ccc;">Link</th>
@@ -175,31 +204,21 @@ export default {
                     <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.sharedLink}</td>
                     <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.sharedFace}</td>
                     <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">${this.value.sharedWpp}</td>
+                </table>
                 </div>
             </div>
-
+            <hr>
             <div>
                 <h3 style="color: #00405c"> Total de vendas/Mês </h3>
-                <table>
                 <div align="center">
+                <table>
                     <tr style="max-width: 500px">
-                        <th style="text-align: center; border: 1px solid #ccc;">Janeiro 2022</th>
-                        <th style="text-align: center; border: 1px solid #ccc;">Fevereiro 2022</th>
-                        <th style="text-align: center; border: 1px solid #ccc;">Março 2022</th>
-                        <th style="text-align: center; border: 1px solid #ccc;">Outubro 2021</th>
-                        <th style="text-align: center; border: 1px solid #ccc;">Novembro 2021</th>
-                        <th style="text-align: center; border: 1px solid #ccc;">Dezembro 2021</th>
+                        <th style="text-align: center; border: 1px solid #ccc;">Mês</th>
+                        <th style="text-align: center; border: 1px solid #ccc;">Vendas</th>
                     </tr>
-                    <tr>
-                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">R$ 182.614,23</td>
-                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">R$ 169.547,31</td>
-                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">R$ 19.422,09</td>
-                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">R$ 706.836,33</td>
-                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">R$ 359.962,37</td>
-                        <td style="text-align: center; border; border: 0.5px solid #ccc;" height="30">R$ 301.583,91</td>
-                    </tr>
-                </div>
+                   ${htmlMonthSales}
                 </table>
+                </div>
             </div>
 
             <hr>
@@ -207,7 +226,7 @@ export default {
             <div>
                 <h3 style="color: #00405c"> Acesso / Hora do Dia </h3>
                 <ul>
-                    <li>Hora ${this.value.hourOfDay[0]} - ${this.value.hourOfDay[1]}%</li>
+                    ${htmlHourOfDay}
                 </ul>
             </div>
         </div>

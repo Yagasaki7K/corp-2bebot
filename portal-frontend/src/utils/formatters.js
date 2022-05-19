@@ -9,6 +9,13 @@ export const formatCustomer = (customer) => {
     return `${name}${documento ? ' - ' + documento : ''}`
 };
 
+export const toLocaleBRL = (number)=> {
+    return number.toLocaleString("pt-br", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
+
 //TODO:
 function formatDollar (num) {
     var p = num.toFixed(2).split(".");
@@ -16,3 +23,4 @@ function formatDollar (num) {
         return num == "-" ? acc : num + (i && !(i % 3) ? "," : "") + acc;
     }, "") + "." + p[1];
 }
+

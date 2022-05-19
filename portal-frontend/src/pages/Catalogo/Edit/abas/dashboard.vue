@@ -316,7 +316,7 @@ export default {
         totalItems: this.totalItems,
         clicksLogo: this.clicksLogo,
         sessions: this.sessions,
-        sales: this.sales,
+        sales: this.toLocaleBRL(this.sales),
         sharedEmail: this.sharedEmail,
         sharedFace: this.sharedFace,
         sharedLink: this.sharedLink,
@@ -324,6 +324,7 @@ export default {
         hourOfDay: this.hourOfDay,
 
          accesses:[
+           this.accesses,
           ["mobile", this.mobile || 0],
           ["desktop", this.desktop || 0],
         ]
