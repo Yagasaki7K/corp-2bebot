@@ -35,6 +35,7 @@ export default {
 <style scoped>
 .backgroundCards {
   background: #00173a;
+  min-height: 6em;
 }
 .text-subtitle2 {
   font-size: 20px;

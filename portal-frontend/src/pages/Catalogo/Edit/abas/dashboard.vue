@@ -32,7 +32,7 @@
             @click="exportAll"
             style="min-width: 8em"
           />
-          <q-btn size="md" color="primary" label="PDF" @click="exportPdf" style="min-width: 8em" />
+          <buttonPDF :value="databutton"/>
           <!-- <a class="text-black" href="#" @click.prevent="exportAll"></a> -->
         </div>
       </div>
@@ -170,10 +170,7 @@ import Accesses from "../charts/accesses.vue";
 import Compartilhamento from "../charts/compartilhamento.vue";
 import HourOfDay from "src/pages/charts/HourOfDay.vue";
 import Xlsx from "xlsx";
-import htmlToPdfmake from 'html-to-pdfmake';
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import buttonPDF from '../../../../components/htmltoPDF/buttonPDF.vue'
 import { startOfMonth, endOfMonth, format, parse } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 export default {
@@ -184,6 +181,7 @@ export default {
     Accesses,
     Compartilhamento,
     HourOfDay,
+    buttonPDF
   },
   // components: { UltimoEnvio },/
   props: ["catalog"],
@@ -309,6 +307,28 @@ export default {
         };
       });
     },
+    databutton(){
+      return {
+        productsTop: this.productsTop,
+        sellMonths: this.sellMonths,
+        pages: this.pages,
+        averageItems: this.averageItems,
+        totalItems: this.totalItems,
+        clicksLogo: this.clicksLogo,
+        sessions: this.sessions,
+        sales: this.sales,
+        sharedEmail: this.sharedEmail,
+        sharedFace: this.sharedFace,
+        sharedLink: this.sharedLink,
+        sharedWpp: this.sharedWpp,
+        hourOfDay: this.hourOfDay,
+
+         accesses:[
+          ["mobile", this.mobile || 0],
+          ["desktop", this.desktop || 0],
+        ]
+      }
+    }
   },
   methods: {
     getPages(pages) {
@@ -487,173 +507,7 @@ export default {
         currency: "BRL",
       });
     },
-    exportPdf() {
-      const initialTable = `
-        <table class="tableCenter">
-            <tr>
-                <th style="width:150px">Total Faturamento</th>
-                <th style="width:150px">Sessões Iniciadas</th>
-                <th style="width:150px">Total Visualizações</th>
-            </tr>
-            <tr>
-                <td style="text-align:center" height="50">R$1.739.966,24</td>
-                <td style="text-align:center" height="50">32.005</td>
-                <td style="text-align:center" height="50">11.142.142</td>
-            </tr>
-            <tr>
-                <th style="width:150px">Média Itens Carrinho</th>
-                <th style="width:150px">Total Itens Carrinho</th>
-                <th style="width:150px">Total Cliques Logo</th>
-            </tr>
-            <tr>
-                <td style="text-align:center" height="50">4</td>
-                <td style="text-align:center" height="50">34.404</td>
-                <td style="text-align:center" height="50">3.573</td>
-            </tr>
-        </table>
-            `;
-
-
-    const products = [
-    {name: 'Sabão', quantitySell: 1200, unitPrice: 120.92, totalSell: 9200.32},
-    {name: 'Sabão 2', quantitySell: 1200, unitPrice: 120.92, totalSell: 9200.32}
-    ];
-
-    let htmlProducts = '';
-
-    products.forEach(product => htmlProducts += `
-    <tr>
-        <td style="text-align:center" height="50">${product.name}</td>
-        <td style="text-align:center" height="50">${product.quantitySell}</td>
-        <td style="text-align:center" height="50">${product.unitPrice}</td>
-        <td style="text-align:center" height="50">${product.totalSell}</td>
-    </tr>
-    `);
-
-    function formatDate(){
-      var date = new Date(),
-          day  = date.getDate().toString(),
-          finalDay = (day.length == 1) ? '0'+day : day,
-          month  = (date.getMonth()+1).toString(),
-          finalMonth = (month.length == 1) ? '0'+month : month;
-      return finalDay+"/"+finalMonth;
-    }
-
-    var val = htmlToPdfmake(`
-    <div class="logotipo">
-    </div>
-    <div class="header">
-        <h1>Relatório Completo</h1>
-
-        <div class="header-right">
-            <h4>Data do relatório</h4>
-            <p>${formatDate()}</p>
-        </div>
-    </div>
-
-    <div class="content">
-        <div>
-            <h1>Relatório JPaper</h1>
-
-            ${initialTable}
-
-            <div>
-                <h3> Top 10 Produtos </h3>
-                <table class="tableCenter">
-                    <tr>
-                        <th style="width:150px">Produto</th>
-                        <th style="width:150px">Vendas</th>
-                        <th style="width:150px">Preço Unidade</th>
-                        <th style="width:150px">Total Vendas</th>
-                    </tr>
-                    ${htmlProducts}
-                </table>
-            </div>
-
-            <div>
-                <h3> Top 10 Páginas </h3>
-                <table class="tableCenter">
-                    <tr>
-                        <th style="width:150px">Página</th>
-                        <th style="width:150px">Acessos</th>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center" height="50">Página <bold> 7 </bold>
-                        </td>
-                        <td style="text-align:center" height="50">132.220</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center" height="50">Página <bold> 8 </bold>
-                        </td>
-                        <td style="text-align:center" height="50">122.360</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center" height="50">Página <bold> 9 </bold>
-                        </td>
-                        <td style="text-align:center" height="50">162.320</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div>
-                <h3> Total de vendas/Mês </h3>
-                <table class="tableCenter">
-                    <tr>
-                        <th style="width:120px">Janeiro 2022</th>
-                        <th style="width:120px">Fevereiro 2022</th>
-                        <th style="width:120px">Março 2022</th>
-                        <th style="width:120px">Outubro 2021</th>
-                        <th style="width:120px">Novembro 2021</th>
-                        <th style="width:120px">Dezembro 2021</th>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center" height="30">R$ 182.614,23</td>
-                        <td style="text-align:center" height="30">R$ 169.547,31</td>
-                        <td style="text-align:center" height="30">R$ 19.422,09</td>
-                        <td style="text-align:center" height="30">R$ 706.836,33</td>
-                        <td style="text-align:center" height="30">R$ 359.962,37</td>
-                        <td style="text-align:center" height="30">R$ 301.583,91</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div>
-                <h3> Acesso / Hora do Dia </h3>
-                <ul>
-                    <li>Hora 00:00 - 1%</li>
-                    <li>Hora 01:00 - 1%</li>
-                    <li>Hora 02:00 - 1%</li>
-                    <li>Hora 03:00 - 1%</li>
-                    <li>Hora 04:00 - 1%</li>
-                    <li>Hora 05:00 - 1%</li>
-                    <li>Hora 06:00 - 1%</li>
-                    <li>Hora 07:00 - 1%</li>
-                    <li>Hora 08:00 - 1%</li>
-                    <li>Hora 09:00 - 1%</li>
-                    <li>Hora 10:00 - 1%</li>
-                    <li>Hora 11:00 - 1%</li>
-                    <li>Hora 12:00 - 1%</li>
-                    <li>Hora 13:00 - 1%</li>
-                    <li>Hora 14:00 - 1%</li>
-                    <li>Hora 15:00 - 1%</li>
-                    <li>Hora 16:00 - 1%</li>
-                    <li>Hora 17:00 - 1%</li>
-                    <li>Hora 18:00 - 1%</li>
-                    <li>Hora 19:00 - 1%</li>
-                    <li>Hora 20:00 - 1%</li>
-                    <li>Hora 21:00 - 1%</li>
-                    <li>Hora 22:00 - 1%</li>
-                    <li>Hora 23:00 - 1%</li>
-                </ul>
-            </div>
-        </div>
-
-    </div>
-    `);
-    var contentPDF = {content:val};
-    pdfMake.createPdf(contentPDF).download();
-    },
-    },
+},
   mounted() {
     this.init();
   },
