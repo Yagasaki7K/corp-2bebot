@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "serve:development": "vite --mode development",
+    "dev": "vite --mode development",
     "serve:staging": "vite --mode staging",
     "build": "tsc && vite build",
     "preview": "vite preview"

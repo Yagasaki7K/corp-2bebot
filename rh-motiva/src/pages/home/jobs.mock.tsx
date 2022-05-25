@@ -2,7 +2,7 @@ export const listAppointmentsMockResponse = [
   {
     "_id": "62296f0e9ba27bcaafd286b0",
     "token": "dbd4559d-4af0-470a-8bc7-490b8bc44764",
-    "status": "agendado",
+    "status": "Agendado",
     "createdAt": "2022-03-10T03:22:54.528Z",
     "updatedAt": "2022-03-10T04:22:12.704Z",
     "__v": 0,
@@ -18,7 +18,7 @@ export const listAppointmentsMockResponse = [
   {
     "_id": "62296f0e9ba27bcaafd286b0",
     "token": "dbd4559d-4af0-470a-8bc7-490b8bc44764",
-    "status": "agendado",
+    "status": "Agendado",
     "createdAt": "2022-03-10T03:22:54.528Z",
     "updatedAt": "2022-03-10T04:22:12.704Z",
     "__v": 0,
@@ -34,7 +34,7 @@ export const listAppointmentsMockResponse = [
   {
     "_id": "62296f0e9ba27bcaafd286b0",
     "token": "dbd4559d-4af0-470a-8bc7-490b8bc44764",
-    "status": "agendado",
+    "status": "Agendado",
     "createdAt": "2022-03-10T03:22:54.528Z",
     "updatedAt": "2022-03-10T04:22:12.704Z",
     "__v": 0,
