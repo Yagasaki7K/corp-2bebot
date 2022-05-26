@@ -4,17 +4,14 @@ import LogoImg from '../../assets/images/logo.svg'
 import { Layout, Form, Input, Button } from 'antd'
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
 
-const loginDatabase =
-    {
-        username: 'admin',
-        password: 'admin'
-    }
+const username = 'admin'
+const password = 'admin'
 
 export const LoginPage = () => {
     const navigate = useNavigate()
 
     const onSubmit = (values: any) => {
-        if (values.user === loginDatabase.username && values.password === loginDatabase.password) {
+        if (values.user === username && values.password === password) {
             navigate('/home')
         } else {
             alert('Usuário ou senha incorretos')
@@ -28,25 +25,18 @@ export const LoginPage = () => {
                     <img src={LogoImg} />
                 </div>
                 <Form.Item
-                    name="user"
-                    rules={[{ required: true, message: 'Digite o seu usuario' }]}>
-                    <Input
-                        prefix={<UserOutlined className="site-form-item-icon" />}
+                    name="user" rules={[{ required: true, message: 'Digite o seu usuario' }]}>
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />}
                         placeholder="Username" />
                 </Form.Item>
-                <Form.Item
-                    name="password"
-                    rules={[{ required: true, message: 'Digite a sua senha' }]}>
-                    <Input
-                        prefix={<LockOutlined className="site-form-item-icon" />}
-                        type="password"
-                        placeholder="Password" />
+
+                <Form.Item name="password" rules={[{ required: true, message: 'Digite a sua senha' }]}>
+                    <Input prefix={<LockOutlined className="site-form-item-icon" />}
+                        type="password" placeholder="Password" />
                 </Form.Item>
+
                 <Form.Item>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        className={style.button}>
+                    <Button type="primary" htmlType="submit" className={style.button}>
                         Log in <LoginOutlined />
                     </Button>
                 </Form.Item>
