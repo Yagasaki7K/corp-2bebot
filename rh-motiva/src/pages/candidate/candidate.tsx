@@ -12,6 +12,7 @@ export const CandidatePage = () => {
     const [loading, setLoading] = useState(true)
     const [candidate, setCandidate] = useState([])
     const [showModal, setShowModal] = useState(false)
+
     const [candidateSelected, setCandidateSelected] = useState<SqueduleType>()
 
     useEffect(() => {
@@ -40,6 +41,64 @@ export const CandidatePage = () => {
     const closeModal = () => {
         setShowModal(false)
     }
+
+    useEffect(() => console.log('candidate', candidate), [candidate])
+
+    function filterFunction() {
+        let filter = document.getElementById('filterSelect') as HTMLSelectElement
+        let filterResult = filter.value
+
+        if (filterResult === "name") {
+            const filtered = candidate.sort((res: any) => {
+                if (res.name) {
+                    return res
+                }
+            }
+            )
+            setCandidate(filtered)
+        }
+
+        if (filterResult === "vaga") {
+            const filtered = candidate.sort((res: any) => {
+                if (res.vaga) {
+                    return res
+                }
+            }
+            )
+            setCandidate(filtered)
+        }
+
+        if (filterResult === "phone") {
+            const filtered = candidate.sort((res: any) => {
+                if (res.phone) {
+                    return res
+                }
+            }
+            )
+            setCandidate(filtered)
+        }
+
+        if (filterResult === "city") {
+            const filtered = candidate.sort((res: any) => {
+                if (res.city) {
+                    return res
+                }
+            }
+            )
+            setCandidate(filtered)
+        }
+
+        if (filterResult === "status") {
+            const filtered = candidate.sort((res: any) => {
+                if (res.status) {
+                    return res
+                }
+            }
+            )
+            setCandidate(filtered)
+        }
+    }
+    
 
     return (
         <>
@@ -119,6 +178,14 @@ export const CandidatePage = () => {
                         <div>
                             <SearchOutlined />
                             <input type="text" id="search" placeholder="Pesquisar..."/>
+                            <select id="filterSelect" onChange={filterFunction}>
+                                <option value="">Filtrar</option>
+                                <option value="name">Nome</option>
+                                <option value="vaga">Vaga</option>
+                                <option value="phone">Telefone</option>
+                                <option value="city">Cidade</option>
+                                <option value="status">Status</option>
+                            </select>
                         </div>
                     </div>
                     <div>
