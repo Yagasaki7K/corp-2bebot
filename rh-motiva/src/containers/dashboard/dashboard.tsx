@@ -1,14 +1,15 @@
 import style from './dashboard.module.scss'
 import { useNavigate } from "react-router-dom"
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Breadcrumb } from 'antd'
 import {
     DesktopOutlined,
     PieChartOutlined,
-    LogoutOutlined,
+    FileOutlined,
   } from '@ant-design/icons';
 import Logo from '../../assets/images/logo.svg'
 
-const { Sider } = Layout
+const { SubMenu } = Menu
+const { Header, Content, Sider } = Layout
 
 export const Dashboard = ({ children }:any) => {
     const navigate = useNavigate()
@@ -19,7 +20,7 @@ export const Dashboard = ({ children }:any) => {
                 <Sider collapsed={false} style={{ minHeight: '100vh' }}>
                     <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" className={style.menu}>
                         <div className={style.logo}>
-                            <a href="/home"><img src={Logo} /></a>
+                            <img src={Logo} />
                         </div>
                         <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => navigate('/home')}>
                             Inicio
@@ -27,11 +28,14 @@ export const Dashboard = ({ children }:any) => {
                         <Menu.Item key="2" icon={<PieChartOutlined />} onClick={() => navigate('/schedules')}>
                             Agendamentos
                         </Menu.Item>
-                        <Menu.Item key="3" icon={<DesktopOutlined />} onClick={() => navigate('/candidate')}>
+                        <Menu.Item key="3" icon={<PieChartOutlined />} onClick={() => navigate('/jobs')}>
+                            Vagas
+                        </Menu.Item>
+                        <Menu.Item key="4" icon={<DesktopOutlined />} onClick={() => navigate('/candidate')}>
                             Candidatos
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<LogoutOutlined />} onClick={() => navigate('/login')}>
-                            Deslogar
+                        <Menu.Item key="" icon={<FileOutlined />} onClick={() => navigate('/login')}>
+                            Sair
                         </Menu.Item>
                     </Menu>
                 </Sider>

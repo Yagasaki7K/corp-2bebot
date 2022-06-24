@@ -4,7 +4,6 @@ import api from '../../services/api'
 import { useEffect, useState } from 'react'
 import { SqueduleType } from './types'
 import { columnsTableMock } from './schedules.mock'
-import { SearchOutlined } from '@ant-design/icons'
 const { Content } = Layout
 const { Title, Text  } = Typography
 
@@ -105,13 +104,7 @@ export const SchedulesPage = () => {
                         margin: 0,
                         minHeight: 280,
                     }}>
-                    <div className={style.input}>
-                        <Title level={2}>Agendamentos</Title>
-                        <div>
-                            <SearchOutlined />
-                            <input type="text" id="search" placeholder="Pesquisar..."/>
-                        </div>
-                    </div>
+                    <Title level={2}>Agendamentos</Title>
                     <Table columns={columnsTableMock} loading={loading} dataSource={schedules} onRow={record => {
                         return {
                             onClick: () => {

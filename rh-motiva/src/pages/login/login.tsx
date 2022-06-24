@@ -1,21 +1,17 @@
 import { useNavigate } from "react-router-dom"
 import style from './login.module.scss'
+import Mascote from '../../assets/images/mascote.svg'
 import LogoImg from '../../assets/images/logo.svg'
-import { Layout, Form, Input, Button } from 'antd'
-import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
-
-const username = 'admin'
-const password = 'admin'
+import { Dashboard } from "../../containers/dashboard/dashboard"
+import { Layout, Form, Input, Button, Checkbox} from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 export const LoginPage = () => {
     const navigate = useNavigate()
 
     const onSubmit = (values: any) => {
-        if (values.user === username && values.password === password) {
-            navigate('/home')
-        } else {
-            alert('Usuário ou senha incorretos')
-        }
+        console.log(values)
+        navigate('/home')
     }
 
     return (
@@ -24,20 +20,27 @@ export const LoginPage = () => {
                 <div className={style.logo}>
                     <img src={LogoImg} />
                 </div>
-                <Form.Item
-                    name="user" rules={[{ required: true, message: 'Digite o seu usuario' }]}>
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />}
+                <Form.Item 
+                    name="user" 
+                    rules={[{ required: true, message: 'Digite o seu usuario.' }]}>
+                    <Input 
+                        prefix={<UserOutlined className="site-form-item-icon" />} 
                         placeholder="Username" />
                 </Form.Item>
-
-                <Form.Item name="password" rules={[{ required: true, message: 'Digite a sua senha' }]}>
-                    <Input prefix={<LockOutlined className="site-form-item-icon" />}
-                        type="password" placeholder="Password" />
+                <Form.Item 
+                    name="password" 
+                    rules={[{ required: true, message: 'Digite a sua senha.' }]}>
+                    <Input 
+                        prefix={<LockOutlined className="site-form-item-icon" />} 
+                        type="password"
+                        placeholder="Username" />
                 </Form.Item>
-
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className={style.button}>
-                        Log in <LoginOutlined />
+                    <Button 
+                        type="primary" 
+                        htmlType="submit" 
+                        className={style.button}>
+                        Log in
                     </Button>
                 </Form.Item>
             </Form>
