@@ -1,7 +1,7 @@
 import style from './schedules.module.scss'
 import { Layout, Breadcrumb, Typography, Table, Modal, Divider, Button } from 'antd'
 import api from '../../services/api'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { SqueduleType } from './types'
 import { columnsTableMock } from './schedules.mock'
 import { SearchOutlined } from '@ant-design/icons'
@@ -10,9 +10,29 @@ const { Title, Text  } = Typography
 
 export const SchedulesPage = () => {
     const [loading, setLoading] = useState(true)
-    const [schedules, setSchedules] = useState([])
+    const [schedules, setSchedules] = useState<any[]>([])
     const [showModal, setShowModal] = useState(false)
     const [scheduleSelected, setScheduleSelected] = useState<SqueduleType>()
+
+    const [filteredData, setFilteredData] = useState<[]>([])
+    const [wordEntered, setWordEntered] = useState<string>("")
+
+    const inputRef: React.RefObject<HTMLInputElement> =
+        useRef<HTMLInputElement>(null)
+        window.addEventListener("load", () => inputRef.current?.focus())
+        
+    const handleFilter = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
+        const searchWord: string = target.value.toLowerCase()
+        setWordEntered(searchWord)
+        console.log(wordEntered)
+        
+        const newFilter = schedules.filter(({ name }): boolean =>
+            name.toLowerCase().includes(searchWord)
+        )
+
+        if (!searchWord) return setFilteredData([])
+        setFilteredData(newFilter as [])
+    }
 
     useEffect(() => {
         api.get<SqueduleType>('https://motivarh.2be.chat/bridge/listAppointments')
@@ -109,10 +129,11 @@ export const SchedulesPage = () => {
                         <Title level={2}>Agendamentos</Title>
                         <div>
                             <SearchOutlined />
-                            <input type="text" id="search" placeholder="Pesquisar..."/>
+                            <input type="text" id="search" placeholder="Pesquisar..."
+                            value={wordEntered} onChange={handleFilter} ref={inputRef}/>
                         </div>
                     </div>
-                    <Table columns={columnsTableMock} loading={loading} dataSource={schedules} onRow={record => {
+                    <Table columns={columnsTableMock} loading={loading} dataSource={wordEntered ? filteredData : schedules } onRow={record => {
                         return {
                             onClick: () => {
                                 openModal(record)

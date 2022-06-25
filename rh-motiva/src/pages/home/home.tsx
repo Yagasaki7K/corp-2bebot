@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import style from './home.module.scss'
 import { Layout, Breadcrumb, Typography, Table, Row, Col } from 'antd'
 import api from '../../services/api'
@@ -42,7 +42,27 @@ const data = [
 
 export const HomePage = () => {
     const [loading, setLoading] = useState(true)
-    const [vacancies, setVacancies] = useState([])
+    const [vacancies, setVacancies] = useState<any[]>([])
+    
+    const [filteredData, setFilteredData] = useState<[]>([])
+    const [wordEntered, setWordEntered] = useState<string>("")
+
+    const inputRef: React.RefObject<HTMLInputElement> =
+        useRef<HTMLInputElement>(null)
+        window.addEventListener("load", () => inputRef.current?.focus())
+        
+    const handleFilter = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
+        const searchWord: string = target.value.toLowerCase()
+        setWordEntered(searchWord)
+        console.log(wordEntered)
+        
+        const newFilter = vacancies.filter(({ name }): boolean =>
+            name.toLowerCase().includes(searchWord)
+        )
+
+        if (!searchWord) return setFilteredData([])
+        setFilteredData(newFilter as [])
+    }
 
     useEffect(() => {
         api.get<SqueduleType>('https://motivarh.2be.chat/bridge/listAppointments')
@@ -146,11 +166,12 @@ export const HomePage = () => {
                             <Title level={2}>Vagas de Recrutamento</Title>
                             <div>
                                 <SearchOutlined />
-                                <input type="text" id="search" placeholder="Pesquisar..."/>
+                                <input type="text" id="search" placeholder="Pesquisar..."
+                                value={wordEntered} onChange={handleFilter} ref={inputRef} />
                             </div>
                         </div>
                         <div>
-                            <Table columns={columns} loading={loading} dataSource={vacancies} />
+                            <Table columns={columns} loading={loading} dataSource={wordEntered ? filteredData : vacancies} />
                         </div>
                     </Content>
                 </Layout>

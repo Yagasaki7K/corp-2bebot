@@ -1,6 +1,6 @@
 import style from './candidate.module.scss'
 import { Layout, Breadcrumb, Typography, Table, Modal, Button, Divider } from 'antd'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import api from '../../services/api'
 import { SqueduleType } from './type'
 import { columnsMock } from './candidate.mock'
@@ -12,9 +12,28 @@ export const CandidatePage = () => {
     const [loading, setLoading] = useState(true)
     const [candidate, setCandidate] = useState<any[]>([])
     const [showModal, setShowModal] = useState(false)
-    const [filterTriggered, setFilterTriggered] = useState({})
 
     const [candidateSelected, setCandidateSelected] = useState<SqueduleType>()
+
+    const [filteredData, setFilteredData] = useState<[]>([])
+    const [wordEntered, setWordEntered] = useState<string>("")
+
+    const inputRef: React.RefObject<HTMLInputElement> =
+        useRef<HTMLInputElement>(null)
+        window.addEventListener("load", () => inputRef.current?.focus())
+        
+    const handleFilter = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
+        const searchWord: string = target.value.toLowerCase()
+        setWordEntered(searchWord)
+        console.log(wordEntered)
+        
+        const newFilter = candidate.filter(({ name }): boolean =>
+            name.toLowerCase().includes(searchWord)
+        )
+
+        if (!searchWord) return setFilteredData([])
+        setFilteredData(newFilter as [])
+    }
 
     useEffect(() => {
         console.log("ABC")
@@ -169,7 +188,8 @@ export const CandidatePage = () => {
                         <Title level={2}>Candidatos</Title>
                         <div>
                             <SearchOutlined />
-                            <input type="text" id="search" placeholder="Pesquisar..." />
+                            <input type="text" id="search" placeholder="Pesquisar..." 
+                            value={wordEntered} onChange={handleFilter} ref={inputRef}/>
                             <select id="filterSelect" onChange={() => sortByKey()}>
                                 <option value="">Filtrar</option>
                                 <option value="name">Nome</option>
@@ -181,7 +201,7 @@ export const CandidatePage = () => {
                         </div>
                     </div>
                     <div>
-                        <Table columns={columnsMock} loading={loading} dataSource={[...candidate]} onRow={record => {
+                        <Table columns={columnsMock} loading={loading} dataSource={wordEntered ? filteredData : [...candidate] } onRow={record => {
                             return {
                                 onClick: () => {
                                     openModal(record)
