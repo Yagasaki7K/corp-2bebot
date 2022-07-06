@@ -1,0 +1,57 @@
+{
+  "name": "mdb-vue-admin-template",
+  "version": "6.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "vue-cli-service serve --mode production"
+  },
+  "dependencies": {
+    "@trevoreyre/autocomplete-vue": "^2.2.0",
+    "axios": "^0.21.1",
+    "chart.js": "^2.9.4",
+    "core-js": "^3.4.4",
+    "date-fns": "^2.19.0",
+    "mdbvue": "6.5.0",
+    "portal-vue": "^2.1.7",
+    "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.1",
+    "vue-select": "^3.18.3",
+    "vue-toast-notification": "^0.6.1",
+    "vue2-google-maps": "^0.10.7",
+    "vuejs-datepicker": "^1.6.2",
+    "vuejs-datetimepicker": "^1.1.13"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.1.2",
+    "@vue/cli-plugin-eslint": "^4.1.2",
+    "@vue/cli-service": "^4.1.2",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^6.1.2",
+    "vue-cli-plugin-mdb": "^2.0.4",
+    "vue-template-compiler": "2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "no-console": "off"
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
